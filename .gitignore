@@ -54,3 +54,5 @@ force-app/main/default/uiBundles/*/build/
 
 # Local MCP server config
 .mcp.json
+
+/floorplan*

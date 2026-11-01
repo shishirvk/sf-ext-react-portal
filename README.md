@@ -1,5 +1,9 @@
 # React External App
 
+## Floorplan
+
+Access the technical documentation and app design here : [App-Design-Floorplan](https://shishirvk.github.io/sf-ext-react-portal/)
+
 A customer-facing portal on the Salesforce platform, hosted on Experience Cloud. It includes login and registration, global search, a themeable design, and a modular structure that lets a separate team build features independently. Built with React, Vite, TypeScript, and Tailwind/shadcn.
 
 | I want to... | Go to |
