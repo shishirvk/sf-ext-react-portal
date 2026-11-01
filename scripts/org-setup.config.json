@@ -1,0 +1,9 @@
+{
+  "permsetAssignments": {
+    "assignments": {
+      "sfextreactportal_Guest_User_Api_Access": {
+        "assignee": "guestUser"
+      }
+    }
+  }
+}
