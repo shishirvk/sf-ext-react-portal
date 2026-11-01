@@ -11,6 +11,23 @@ DLS values onto these tokens. Paths in this guide are relative to
 > Only use branding you have the rights to. This portal has a public login page, so
 > copying another company's logo or look can create legal and phishing risks.
 
+## How Bootstrap and reactstrap fit in
+
+The portal uses [reactstrap](https://reactstrap.github.io/) with Bootstrap 5.
+
+- `src/components/ui` wraps reactstrap and Bootstrap's classes, so modules keep importing
+  from there and don't need to know about either library.
+- Menus, select lists, dialogs and popovers keep Radix for keyboard and screen reader
+  behaviour, styled with Bootstrap's classes.
+- `src/styles/bootstrap.scss` builds Bootstrap from source **without its utility classes**.
+  They are `!important` and share names with Tailwind's (`p-4`, `mb-0`), so use Tailwind
+  for layout and spacing. Don't import `bootstrap/dist/css/bootstrap.css`.
+- Bootstrap sits in a CSS layer below Tailwind's utilities, so a Tailwind class on a
+  component overrides Bootstrap. The layer order is at the top of `src/styles/global.css`.
+
+The tokens below drive Tailwind classes. To change a Bootstrap component's own look, such
+as `.btn-primary`, set its Sass variables above the imports in `src/styles/bootstrap.scss`.
+
 ## 1. Add your stylesheet
 
 Create `src/styles/corporate-dls.css`:

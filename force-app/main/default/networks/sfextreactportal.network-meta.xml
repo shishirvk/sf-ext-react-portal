@@ -34,6 +34,7 @@
     <gatherCustomerSentimentData>false</gatherCustomerSentimentData>
     <headlessForgotPasswordTemplate>unfiled$public/CommunityHeadlessForgotPasswordTemplate</headlessForgotPasswordTemplate>
     <headlessRegistrationTemplate>unfiled$public/CommunityHeadlessRegistrationTemplate</headlessRegistrationTemplate>
+    <logoutUrl>https://skdeveloper-dev-ed.my.site.com/sfextreactportal/login</logoutUrl>
     <networkMemberGroups>
         <profile>admin</profile>
     </networkMemberGroups>

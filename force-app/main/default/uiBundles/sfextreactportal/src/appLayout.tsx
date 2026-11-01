@@ -3,7 +3,7 @@ import BrandLogo from "./components/BrandLogo";
 import { getAllRoutes } from "./router-utils";
 import { useEffect, useId, useRef, useState } from "react";
 import { AuthMenu } from "./features/authentication/menu/AuthMenu";
-import { Button } from "./components/ui/button";
+import { Collapse, Nav, Navbar, NavItem, NavLink } from "reactstrap";
 import CustomerWebClientChat from "./components/CustomerWebClientChat";
 
 export default function AppLayout() {
@@ -61,87 +61,52 @@ export default function AppLayout() {
 			>
 				Skip to main content
 			</a>
-			<nav aria-label="Primary" className="bg-card border-b border-border border-t-4 border-t-primary">
-				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-					<div className="flex justify-between items-center h-16">
-						<div className="flex items-center gap-8">
-							<BrandLogo />
-							<div className="hidden items-center gap-1 md:flex">
-								{navigationRoutes.map((item) => (
-									<Link
-										key={item.path}
+			<Navbar
+				aria-label="Primary"
+				expand="md"
+				light
+				color="white"
+				className="border-b shadow-sm"
+				container={false}
+			>
+				<div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-x-6 px-4 sm:px-6 lg:px-8">
+					<BrandLogo />
+					<div className="order-2 ml-auto flex items-center gap-2 md:order-3">
+						<AuthMenu />
+						<button
+							ref={menuButtonRef}
+							type="button"
+							className="navbar-toggler"
+							onClick={toggleMenu}
+							aria-label="Toggle menu"
+							aria-expanded={isOpen}
+							aria-controls={navId}
+						>
+							<span aria-hidden="true" className="navbar-toggler-icon" />
+						</button>
+					</div>
+					<Collapse id={navId} isOpen={isOpen} navbar className="order-3 md:order-2">
+						<Nav navbar>
+							{navigationRoutes.map((item) => (
+								<NavItem key={item.path}>
+									<NavLink
+										tag={Link}
 										to={item.path}
+										active={isActive(item.path)}
 										aria-current={isActive(item.path) ? "page" : undefined}
-										className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-											isActive(item.path)
-												? "bg-secondary text-secondary-foreground"
-												: "text-muted-foreground hover:bg-muted hover:text-foreground"
-										}`}
+										onClick={() => {
+											setIsOpen(false);
+											if (isActive(item.path)) menuButtonRef.current?.focus();
+										}}
 									>
 										{item.label}
-									</Link>
-								))}
-							</div>
-						</div>
-						<div className="flex items-center gap-2">
-							<AuthMenu />
-							<Button
-								ref={menuButtonRef}
-								variant="ghost"
-								size="icon"
-								className="md:hidden"
-								onClick={toggleMenu}
-								aria-label="Toggle menu"
-								aria-expanded={isOpen}
-								aria-controls={navId}
-							>
-								<div
-									aria-hidden="true"
-									className="w-6 h-6 flex flex-col justify-center space-y-1.5"
-								>
-									<span
-										className={`block h-0.5 w-6 bg-current transition-all ${
-											isOpen ? "rotate-45 translate-y-2" : ""
-										}`}
-									/>
-									<span
-										className={`block h-0.5 w-6 bg-current transition-all ${isOpen ? "opacity-0" : ""}`}
-									/>
-									<span
-										className={`block h-0.5 w-6 bg-current transition-all ${
-											isOpen ? "-rotate-45 -translate-y-2" : ""
-										}`}
-									/>
-								</div>
-							</Button>
-						</div>
-					</div>
-					<div id={navId} className="pb-4 md:hidden" hidden={!isOpen}>
-						{isOpen && (
-							<div className="flex flex-col space-y-1">
-								{navigationRoutes.map((item) => (
-									<Button
-										key={item.path}
-										variant={isActive(item.path) ? "secondary" : "ghost"}
-										asChild
-										className="justify-start"
-									>
-										<Link
-											to={item.path}
-											onClick={() => {
-												setIsOpen(false);
-												if (isActive(item.path)) menuButtonRef.current?.focus();
-											}}
-										>
-											{item.label}
-										</Link>
-									</Button>
-								))}
-							</div>
-						)}
-					</div>
+									</NavLink>
+								</NavItem>
+							))}
+						</Nav>
+					</Collapse>
 				</div>
-			</nav>
+			</Navbar>
 			<div id="main-content" ref={outletWrapperRef}>
 				<Outlet />
 			</div>

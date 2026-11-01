@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { Table as ReactstrapTable } from 'reactstrap';
+
 import { cn } from '../../lib/utils';
 
 function Table({
@@ -13,12 +15,13 @@ function Table({
       role="region"
       aria-label={ariaLabel}
       tabIndex={0}
-      className="relative w-full overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-purple"
+      className="relative w-full overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <table
+      <ReactstrapTable
+        hover
         data-slot="table"
-        className={cn('w-full caption-bottom text-sm', className)}
-        {...props}
+        className={cn('mb-0 caption-bottom', className)}
+        {...(props as any)}
       />
     </div>
   );
@@ -62,7 +65,7 @@ function TableRow({ className, ...props }: React.ComponentProps<'tr'>) {
     <tr
       data-slot="table-row"
       className={cn(
-        'hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors',
+        'data-[state=selected]:table-active',
         className
       )}
       {...props}

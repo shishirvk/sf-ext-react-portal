@@ -84,7 +84,7 @@ export function DefaultResultRow({ node, source }: DefaultResultRowProps) {
 
 	const content: ReactNode = (
 		<>
-			<span className="font-medium">{title ?? "—"}</span>
+			<span className="font-medium text-primary">{title ?? "—"}</span>
 			{subtitleParts.length > 0 && (
 				<p className="text-sm text-neutral-600 dark:text-neutral-300">
 					{subtitleParts.join(" · ")}
@@ -99,7 +99,7 @@ export function DefaultResultRow({ node, source }: DefaultResultRowProps) {
 			return (
 				<Link
 					to={href}
-					className="block hover:bg-accent rounded-md px-3 -mx-3 py-1 transition-colors"
+					className="block text-foreground no-underline hover:bg-accent rounded-md px-3 -mx-3 py-1 transition-colors"
 					aria-label={`View: ${title ?? "result"}`}
 				>
 					{content}

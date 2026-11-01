@@ -4,10 +4,9 @@ import { z } from "zod";
 import { CenteredPageLayout } from "../layout/centered-page-layout";
 import { AuthForm } from "../forms/auth-form";
 import { useAppForm } from "../hooks/form";
-import { createDataSDK } from "@salesforce/platform-sdk";
 import { ROUTES, AUTH_PLACEHOLDERS } from "../authenticationConfig";
 import { emailSchema, passwordSchema, getStartUrl, type AuthResponse } from "../authHelpers";
-import { ApiError, handleApiResponse } from "../utils/helpers";
+import { ApiError, handleApiResponse, postGuestRequest } from "../utils/helpers";
 
 const registerSchema = z
 	.object({
@@ -41,21 +40,10 @@ export default function Register() {
 		onSubmit: async ({ value: formFieldValues }) => {
 			setSubmitError(null);
 			try {
-				// [Dev Note] Salesforce Integration:
-				// We use the Data SDK fetch to make an authenticated (or guest) call to Salesforce.
-				// "/services/apexrest/auth/register" refers to a custom Apex Class exposed as a REST resource.
-				// You must ensure this Apex class exists in your org and handles registration
-				// (e.g., duplicate checks and user creation such as Site.createExternalUser).
+				// "/services/apexrest/auth/register" is a custom Apex class exposed as a REST
+				// resource. It handles duplicate checks and user creation.
 				const { confirmPassword: _confirmPassword, ...request } = formFieldValues;
-				const sdk = await createDataSDK();
-				const response = await sdk.fetch!("/services/apexrest/auth/register", {
-					method: "POST",
-					body: JSON.stringify({ request }),
-					headers: {
-						"Content-Type": "application/json",
-						Accept: "application/json",
-					},
-				});
+				const response = await postGuestRequest("/services/apexrest/auth/register", { request });
 				const result = await handleApiResponse<AuthResponse>(response);
 				if (result?.redirectUrl) {
 					// Hard navigate with assign (not replace) so this page stays in history and

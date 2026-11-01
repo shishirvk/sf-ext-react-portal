@@ -4,10 +4,9 @@ import { z } from "zod";
 import { CenteredPageLayout } from "../layout/centered-page-layout";
 import { AuthForm } from "../forms/auth-form";
 import { useAppForm } from "../hooks/form";
-import { createDataSDK } from "@salesforce/platform-sdk";
 import { ROUTES } from "../authenticationConfig";
 import { emailSchema, getStartUrl, type AuthResponse } from "../authHelpers";
-import { ApiError, handleApiResponse } from "../utils/helpers";
+import { ApiError, handleApiResponse, postGuestRequest } from "../utils/helpers";
 import { SocialLogin } from "../components/SocialLogin";
 
 const loginSchema = z.object({
@@ -26,23 +25,10 @@ export default function Login() {
 		onSubmit: async ({ value }) => {
 			setSubmitError(null);
 			try {
-				// [Dev Note] Salesforce Integration:
-				// We use the Data SDK fetch to make an authenticated (or guest) call to Salesforce.
-				// "/services/apexrest/auth/login" refers to a custom Apex REST resource.
-				// You must ensure this Apex class exists in your org and handles the login logic
-				// (e.g., creating a session or returning a token).
-				const sdk = await createDataSDK();
-				const response = await sdk.fetch!("/services/apexrest/auth/login", {
-					method: "POST",
-					body: JSON.stringify({
-						email: value.email.trim().toLowerCase(),
-						password: value.password,
-						startUrl: getStartUrl(searchParams),
-					}),
-					headers: {
-						"Content-Type": "application/json",
-						Accept: "application/json",
-					},
+				const response = await postGuestRequest("/services/apexrest/auth/login", {
+					email: value.email.trim().toLowerCase(),
+					password: value.password,
+					startUrl: getStartUrl(searchParams),
 				});
 				const result = await handleApiResponse<AuthResponse>(response);
 				if (result?.redirectUrl) {
@@ -76,10 +62,15 @@ export default function Login() {
 	});
 
 	return (
-		<CenteredPageLayout title={ROUTES.LOGIN.TITLE}>
+		<CenteredPageLayout
+			title={ROUTES.LOGIN.TITLE}
+			topAligned={false}
+			className="glass-backdrop min-h-[calc(100svh-4rem)]"
+		>
 			<form.AppForm>
 				<AuthForm
 					title="Login"
+					cardClassName="glass-panel"
 					description="Enter your email below to login to your account"
 					error={submitError}
 					submit={{ text: "Login", loadingText: "Logging in…" }}

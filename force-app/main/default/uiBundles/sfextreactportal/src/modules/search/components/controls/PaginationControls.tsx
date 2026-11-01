@@ -108,7 +108,7 @@ export function PaginationControls({
 					Results per page:
 				</Label>
 				<Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
-					<SelectTrigger id={selectId} className="w-16">
+					<SelectTrigger id={selectId} className="w-20">
 						<SelectValue />
 					</SelectTrigger>
 					<SelectContent>

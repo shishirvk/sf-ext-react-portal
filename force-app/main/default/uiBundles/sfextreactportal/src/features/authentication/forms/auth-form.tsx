@@ -12,6 +12,8 @@ import { useId } from "react";
  * for all authentication forms.
  */
 interface AuthFormProps extends Omit<React.ComponentProps<"form">, "onSubmit"> {
+	/** Extra classes for the card around the form, e.g. "glass-panel". */
+	cardClassName?: string;
 	title: string;
 	description: string;
 	error?: React.ReactNode;
@@ -50,6 +52,7 @@ export function AuthForm({
 	children,
 	submit,
 	footer,
+	cardClassName,
 	...props
 }: AuthFormProps) {
 	const form = useFormContext();
@@ -61,7 +64,7 @@ export function AuthForm({
 	const isSubmitDisabled = submit.disabled || showAuthAlert || loading;
 
 	return (
-		<CardLayout title={title} description={description}>
+		<CardLayout title={title} description={description} className={cardClassName}>
 			<h1 className="sr-only">{title}</h1>
 			<div className="space-y-6">
 				{/* [Dev Note] Auth status alert for authenticated users on public pages */}

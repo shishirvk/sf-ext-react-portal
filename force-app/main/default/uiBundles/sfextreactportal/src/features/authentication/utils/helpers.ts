@@ -1,3 +1,35 @@
+import { createDataSDK } from "@salesforce/platform-sdk";
+
+/**
+ * Sends a public sign-in form (login, sign-up, forgot password) to its Apex REST
+ * resource, e.g. "/services/apexrest/auth/login".
+ *
+ * On a live site this is a plain fetch rather than the Data SDK. The SDK asks for a
+ * CSRF token first, and Salesforce refuses that request for guest users on this org
+ * (403 API_DISABLED_FOR_ORG), which would stop these forms working. These resources
+ * don't need the token. All other portal requests should keep using the SDK.
+ */
+export async function postGuestRequest(path: string, body: unknown): Promise<Response> {
+	const init = {
+		method: "POST",
+		body: JSON.stringify(body),
+		headers: {
+			"Content-Type": "application/json",
+			Accept: "application/json",
+		},
+	};
+	const apiPath: string | undefined = (globalThis as any).SFDC_ENV?.apiPath;
+	if (apiPath) {
+		return fetch(`${apiPath.replace(/\/+$/, "")}${path}`, {
+			...init,
+			credentials: "same-origin",
+		});
+	}
+	// Local preview has no site API path, so it goes through the SDK.
+	const sdk = await createDataSDK();
+	return sdk.fetch!(path, init);
+}
+
 /**
  * Error thrown when the API returns a non-OK response with structured error messages.
  * The `errors` array contains user-facing messages that are safe to display —

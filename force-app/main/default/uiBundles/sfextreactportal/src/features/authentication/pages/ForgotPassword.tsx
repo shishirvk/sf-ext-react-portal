@@ -3,9 +3,8 @@ import { z } from "zod";
 import { CenteredPageLayout } from "../layout/centered-page-layout";
 import { AuthForm } from "../forms/auth-form";
 import { useAppForm } from "../hooks/form";
-import { createDataSDK } from "@salesforce/platform-sdk";
 import { ROUTES } from "../authenticationConfig";
-import { ApiError, handleApiResponse } from "../utils/helpers";
+import { ApiError, handleApiResponse, postGuestRequest } from "../utils/helpers";
 
 const forgotPasswordSchema = z.object({
 	username: z
@@ -28,14 +27,8 @@ export default function ForgotPassword() {
 			try {
 				// [Dev Note] Custom Apex Endpoint: /auth/forgot-password
 				// You must ensure this Apex class exists in your org
-				const sdk = await createDataSDK();
-				const response = await sdk.fetch!("/services/apexrest/auth/forgot-password", {
-					method: "POST",
-					body: JSON.stringify({ username: value.username.trim() }),
-					headers: {
-						"Content-Type": "application/json",
-						Accept: "application/json",
-					},
+				const response = await postGuestRequest("/services/apexrest/auth/forgot-password", {
+					username: value.username.trim(),
 				});
 				await handleApiResponse(response);
 				setSuccess(true);

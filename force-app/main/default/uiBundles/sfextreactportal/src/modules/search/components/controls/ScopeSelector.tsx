@@ -64,7 +64,7 @@ export function ScopeSelector({
 	return (
 		<div className={className}>
 			<Select value={scope} onValueChange={onScopeChange}>
-				<SelectTrigger size="sm" className="min-w-[140px]" aria-label="Search scope">
+				<SelectTrigger className="min-w-[140px]" aria-label="Search scope">
 					<SelectValue />
 				</SelectTrigger>
 				<SelectContent>

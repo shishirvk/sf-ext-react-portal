@@ -32,6 +32,16 @@ export default defineConfig(({ mode }) => {
         : []),
     ] as import('vite').PluginOption[],
 
+    css: {
+      preprocessorOptions: {
+        scss: {
+          // Bootstrap 5.3's Sass still uses these older language features.
+          quietDeps: true,
+          silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'if-function'],
+        },
+      },
+    },
+
     // Build configuration for MPA
     build: {
       outDir: resolve(__dirname, 'dist'),

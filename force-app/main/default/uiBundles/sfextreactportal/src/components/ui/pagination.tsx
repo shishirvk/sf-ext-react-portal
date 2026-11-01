@@ -1,7 +1,10 @@
 import * as React from 'react';
+import {
+  PaginationItem as ReactstrapPaginationItem,
+  PaginationLink as ReactstrapPaginationLink,
+} from 'reactstrap';
 
 import { cn } from '../../lib/utils';
-import { Button } from './button';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -27,41 +30,41 @@ function PaginationContent({
   return (
     <ul
       data-slot="pagination-content"
-      className={cn('gap-0.5 flex items-center', className)}
+      className={cn('pagination mb-0 items-center', className)}
       {...props}
     />
   );
 }
 
 function PaginationItem({ ...props }: React.ComponentProps<'li'>) {
-  return <li data-slot="pagination-item" {...props} />;
+  return <ReactstrapPaginationItem data-slot="pagination-item" {...(props as any)} />;
 }
 
 type PaginationLinkProps = {
   isActive?: boolean;
-} & Pick<React.ComponentProps<typeof Button>, 'size'> &
-  React.ComponentProps<'a'>;
+} & React.ComponentProps<'a'>;
 
 function PaginationLink({
   className,
   isActive,
-  size = 'icon',
+  href,
   ...props
 }: PaginationLinkProps) {
   return (
-    <Button
-      asChild
-      variant={isActive ? 'outline' : 'ghost'}
-      size={size}
-      className={cn(className)}
-    >
-      <a
-        aria-current={isActive ? 'page' : undefined}
-        data-slot="pagination-link"
-        data-active={isActive}
-        {...props}
-      />
-    </Button>
+    <ReactstrapPaginationLink
+      href={href}
+      // Without an href reactstrap renders a <button>; don't let it submit a form.
+      type={href ? undefined : 'button'}
+      aria-current={isActive ? 'page' : undefined}
+      data-slot="pagination-link"
+      data-active={isActive}
+      className={cn(
+        isActive && 'active',
+        props['aria-disabled'] && 'disabled',
+        className
+      )}
+      {...(props as any)}
+    />
   );
 }
 
@@ -73,11 +76,10 @@ function PaginationPrevious({
   return (
     <PaginationLink
       aria-label="Go to previous page"
-      size="default"
-      className={cn('pl-1.5!', className)}
+      className={cn('inline-flex items-center gap-1', className)}
       {...props}
     >
-      <ChevronLeftIcon data-icon="inline-start" className="cn-rtl-flip" />
+      <ChevronLeftIcon aria-hidden="true" className="cn-rtl-flip size-4" />
       <span className="hidden sm:block">{text}</span>
     </PaginationLink>
   );
@@ -91,12 +93,11 @@ function PaginationNext({
   return (
     <PaginationLink
       aria-label="Go to next page"
-      size="default"
-      className={cn('pr-1.5!', className)}
+      className={cn('inline-flex items-center gap-1', className)}
       {...props}
     >
       <span className="hidden sm:block">{text}</span>
-      <ChevronRightIcon data-icon="inline-end" className="cn-rtl-flip" />
+      <ChevronRightIcon aria-hidden="true" className="cn-rtl-flip size-4" />
     </PaginationLink>
   );
 }
@@ -109,13 +110,10 @@ function PaginationEllipsis({
     <span
       aria-hidden
       data-slot="pagination-ellipsis"
-      className={cn(
-        "size-8 [&_svg:not([class*='size-'])]:size-4 flex items-center justify-center",
-        className
-      )}
+      className={cn('page-link disabled inline-flex items-center', className)}
       {...props}
     >
-      <MoreHorizontalIcon />
+      <MoreHorizontalIcon className="size-4" />
       <span className="sr-only">More pages</span>
     </span>
   );
