@@ -46,3 +46,11 @@ $RECYCLE.BIN/
 **/__pycache__/
 **/.venv/
 **/venv/
+
+# UI Bundle build output
+force-app/main/default/uiBundles/*/dist/
+force-app/main/default/uiBundles/*/build/
+*.tsbuildinfo
+
+# Local MCP server config
+.mcp.json
